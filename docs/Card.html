@@ -1,0 +1,69 @@
+{#if estado === true}
+    <div class="card card-width inline-flex pointer" on:click="fire('seleccionado', { estado })">
+        <img class="card-img-top" src="https://loremflickr.com/300/300/{card.nombre}" alt="Card image cap">
+        <!-- <div class="card-body">
+            <p class="card-text">{ card.nombre }</p>
+        </div> -->
+    </div>
+{:elseif estado === 'INAMOVIBLE'} 
+    <div class="card card-width inline-flex no-drop blackwhite" >
+        <img class="card-img-top" src="https://loremflickr.com/300/300/{card.nombre}" alt="Card image cap">
+        <!-- <div class="card-body">
+            <p class="card-text">INAMOVIBLE</p>
+        </div> -->
+    </div>
+{:else}
+    <div class="card card-width inline-flex pointer" on:click="fire('seleccionado', { estado })">
+        <img class="card-img-top" src="https://loremflickr.com/300/300/orange" alt="Card image cap">
+    </div>
+{/if}
+
+
+<style>
+    .blackwhite{
+        -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+        filter: grayscale(100%);
+    }
+
+    .pointer{
+        cursor: pointer;
+    }
+    .no-drop{
+        cursor: no-drop;
+    }
+
+    .inline-flex{
+        display: inline-flex;
+        margin: 10px;
+    }
+
+    .card-width{
+        width: 8rem;
+    }
+</style>
+<script>
+
+    export default {
+        components:{
+            
+        },
+        computed:{
+            estado: ({ card }) => card.estado
+        },
+        data(){
+            return {
+                card: {
+                    nombre: '',
+                    estado:''
+                }
+            }
+        },
+        oncreate(){
+        
+            
+        },
+        methods: {
+            
+        }
+    }
+</script>

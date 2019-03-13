@@ -1,0 +1,219 @@
+<div class="parent-flex">
+	<div class="all-cards">
+		{#each cards as card, index}
+			
+			{#if (index + 1)%4 === 0}
+				<Card bind:card on:seleccionado="toggleEstado(event, index, card.nombre)"/>
+				<br>
+			{:else}
+				<Card bind:card on:seleccionado="toggleEstado(event, index, card.nombre)"/>
+			{/if}
+		{:else}
+			No hay Cartas!
+		{/each}
+	</div>
+
+	<h1>Aciertos: { aciertos }</h1>
+
+</div>
+
+
+<style>
+	.parent-flex{
+		display: flex;
+		justify-content: center;
+	}
+	h1{
+		    display: flex;
+    align-items: center;
+	}
+
+	
+</style>
+
+<script>
+
+	import Card from '../public/Card.html';
+
+	export default {
+		components:{
+			Card
+		},
+		computed:{
+			counter: ({ cards }) => { 
+				return cards.filter(card => card.estado).length
+			},
+			selected: ({ cards }) => { 
+				return cards.filter(card => card.estado === true)
+			},
+		},
+		data(){
+			return {
+				cards: [
+					{
+						nombre: 'Dog',
+						estado: false
+					},
+					{
+						nombre: 'Cat',
+						estado: false
+					},
+					{
+						nombre: 'Cat',
+						estado: false
+					},
+					{
+						nombre: 'Dog',
+						estado: false
+					},
+					{
+						nombre: 'Dolphin',
+						estado: false
+					},
+					{
+						nombre: 'Dolphin',
+						estado: false
+					},
+					{
+						nombre: 'Whale',
+						estado: false
+					},
+					{
+						nombre: 'Whale',
+						estado: false
+					},
+					{
+						nombre: 'Tiger',
+						estado: false
+					},
+					{
+						nombre: 'Tiger',
+						estado: false
+					},
+					{
+						nombre: 'Bird',
+						estado: false
+					},
+					{
+						nombre: 'Bird',
+						estado: false
+					},
+					{
+						nombre: 'Horse',
+						estado: false
+					},
+					{
+						nombre: 'Horse',
+						estado: false
+					},
+					{
+						nombre: 'Bear',
+						estado: false
+					},
+					{
+						nombre: 'Bear',
+						estado: false
+					},
+					
+				],
+				actual: '',
+				aciertos: 0,
+			}
+		},
+		oncreate(){
+			let { cards } = this.get();
+			let newReorderCards = this.shuffle(cards);
+			this.set({
+				cards: newReorderCards
+			});
+			// console.log('Shuffled Cards ',newReorderCards);
+		},
+		onstate({changed, current, previous}){
+			
+		},
+		methods: {
+			toggleEstado(event, index, current){
+				const { cards } = this.get();
+
+				cards[ index ].estado = !event.estado;
+
+				this.set({
+					cards,
+				});
+				
+				const { counter, actual, aciertos } = this.get();
+				
+				if (!actual) {
+					this.set({
+						actual: current
+					});
+					// console.log(`Set Actual ${actual} to Current ${current}`);
+					
+				} else {
+					// console.log(`If Actual ${actual} === ${current}`);
+					if (actual === current) {
+						const newCards = cards.map(card =>{
+							if (card.nombre === current) {
+								return {
+									...card,
+									estado: 'INAMOVIBLE'
+								}
+							} else {
+								return {
+									...card
+								}
+							}
+						});
+
+						
+
+						this.set({
+							cards: newCards,
+							actual:'',
+							aciertos: aciertos + 1
+						});
+
+						// console.log('Setting cards to inamovible state: ', this.get().cards);
+					} else {
+						const newCards = cards.map(card =>{
+							if (card.estado === true) {
+								return {
+									...card,
+									estado: false
+								}
+							} else {
+								return {
+									...card
+								}
+							}
+						});
+						// console.log(newCards);
+
+						//Wrong Choose: Cover All Cards after 2 seconds
+						setTimeout(() => {
+							this.set({
+								cards: newCards,
+								actual:''
+							});
+						}, 2000);
+					}
+				}
+
+				
+			},
+			shuffle(cards) {
+				const arrayRevuelto = [
+					...cards.sort(() => Math.random() - 0.5)
+				];
+				// console.log(arrayRevuelto);
+				return arrayRevuelto;
+			}
+			
+		},
+		helpers: {
+		},
+
+	}
+</script>
+
+
